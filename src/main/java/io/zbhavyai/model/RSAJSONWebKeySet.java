@@ -6,21 +6,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JSONWebKeySet {
+public class RSAJSONWebKeySet {
 
-    private final List<JSONWebKey> keys = new ArrayList<>();
+    private final List<RSAJSONWebKey> keys = new ArrayList<>();
 
     @JsonCreator
-    public JSONWebKeySet(@JsonProperty("keys") final List<JSONWebKey> keys) {
+    public RSAJSONWebKeySet(@JsonProperty("keys") final List<RSAJSONWebKey> keys) {
         this.keys.addAll(keys);
     }
 
-    public JSONWebKeySet(final JSONWebKey key) {
+    public RSAJSONWebKeySet(final RSAJSONWebKey key) {
         this.keys.add(key);
     }
 
     @JsonProperty("keys")
-    public List<JSONWebKey> getKeyList() {
+    public List<RSAJSONWebKey> getKeyList() {
         return this.keys;
     }
 }

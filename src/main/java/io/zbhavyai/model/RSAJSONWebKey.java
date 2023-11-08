@@ -3,10 +3,10 @@ package io.zbhavyai.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record JSONWebKey(String keyID, String keyType, String modulus, String exponent) {
+public record RSAJSONWebKey(String keyID, String keyType, String modulus, String exponent) {
 
     @JsonCreator
-    public JSONWebKey(
+    public RSAJSONWebKey(
             @JsonProperty("kid") final String keyID,
             @JsonProperty("kty") final String keyType,
             @JsonProperty("n") final String modulus,

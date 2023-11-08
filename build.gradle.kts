@@ -17,6 +17,7 @@ dependencies {
     implementation("io.quarkus:quarkus-resteasy-reactive-jackson")
     implementation("io.quarkus:quarkus-resteasy-reactive")
     implementation("io.quarkus:quarkus-arc")
+    implementation("io.quarkus:quarkus-smallrye-jwt-build")
     implementation("org.bouncycastle:bcpkix-jdk15on:1.68")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")

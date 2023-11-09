@@ -1,16 +1,18 @@
 package io.zbhavyai.service;
 
+import java.security.cert.X509Certificate;
+import java.util.List;
+
 import io.zbhavyai.model.KeyPairWithID;
 import io.zbhavyai.model.RSAJSONWebKeySetWithID;
-
-import java.security.KeyPair;
-import java.security.cert.X509Certificate;
 
 public interface ForgeCraft {
 
     public KeyPairWithID generateKeyPair(String keyID);
 
-    public String[] serializeKeyPair(KeyPairWithID keyPair);
+    public List<String> serializeKeyPair(KeyPairWithID keyPair);
+
+    public List<String> serializeKeyPairToPEM(KeyPairWithID keyPair);
 
     public KeyPairWithID deserializeKeyPair(String keyID, String publicKeyInBase64, String privateKeyInBase64);
 

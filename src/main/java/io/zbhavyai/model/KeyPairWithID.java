@@ -1,19 +1,12 @@
 package io.zbhavyai.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.security.KeyPair;
 
-public record KeyPairWithID(String keyID, KeyPair keyPair) {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    @JsonCreator
-    public KeyPairWithID(
-            @JsonProperty("keyID") String keyID,
-            @JsonProperty("keyPair") KeyPair keyPair) {
-        this.keyID = keyID;
-        this.keyPair = keyPair;
-    }
+public record KeyPairWithID(
+        @JsonProperty("keyID") String keyID,
+        @JsonProperty("keyPair") KeyPair keyPair) {
 
     @JsonProperty("keyID")
     public String getKeyID() {

@@ -1,43 +1,30 @@
 package io.zbhavyai.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record RSAJSONWebKey(String keyID, String keyType, String modulus, String exponent) {
+public record RSAJSONWebKey(
+        @JsonProperty("kid") String keyID,
+        @JsonProperty("kty") String keyType,
+        @JsonProperty("n") String modulus,
+        @JsonProperty("e") String exponent) {
 
-    @JsonCreator
-    public RSAJSONWebKey(
-            @JsonProperty("kid") final String keyID,
-            @JsonProperty("kty") final String keyType,
-            @JsonProperty("n") final String modulus,
-            @JsonProperty("e") final String exponent) {
-        this.keyID = keyID;
-        this.keyType = keyType;
-        this.modulus = modulus;
-        this.exponent = exponent;
-    }
-
-    @Override
     @JsonProperty("kid")
-    public String keyID() {
+    public String getKeyID() {
         return this.keyID;
     }
 
-    @Override
     @JsonProperty("kty")
-    public String keyType() {
+    public String getKeyType() {
         return this.keyType;
     }
 
-    @Override
     @JsonProperty("n")
-    public String modulus() {
+    public String getModulus() {
         return this.modulus;
     }
 
-    @Override
     @JsonProperty("e")
-    public String exponent() {
+    public String getExponent() {
         return this.exponent;
     }
 }

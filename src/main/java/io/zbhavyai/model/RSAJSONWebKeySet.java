@@ -1,26 +1,14 @@
 package io.zbhavyai.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.ArrayList;
 import java.util.List;
 
-public class RSAJSONWebKeySet {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    private final List<RSAJSONWebKey> keys = new ArrayList<>();
-
-    @JsonCreator
-    public RSAJSONWebKeySet(@JsonProperty("keys") final List<RSAJSONWebKey> keys) {
-        this.keys.addAll(keys);
-    }
-
-    public RSAJSONWebKeySet(final RSAJSONWebKey key) {
-        this.keys.add(key);
-    }
+public record RSAJSONWebKeySet(
+        @JsonProperty("keys") List<RSAJSONWebKey> keys) {
 
     @JsonProperty("keys")
-    public List<RSAJSONWebKey> getKeyList() {
+    public List<RSAJSONWebKey> getKeys() {
         return this.keys;
     }
 }

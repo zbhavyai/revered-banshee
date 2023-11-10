@@ -110,17 +110,6 @@ public class ForgeCraftInternalImpl implements ForgeCraft {
     }
 
     @Override
-    public String createJwtToken(KeyPairWithID keyPair, String clientID, String tokenURL) {
-        return Jwt.claims()
-                .issuer(clientID)
-                .subject(clientID)
-                .audience(tokenURL)
-                .jws()
-                .keyId(keyPair.getKeyID())
-                .algorithm(SignatureAlgorithm.RS256).sign(keyPair.getKeyPair().getPrivate());
-    }
-
-    @Override
     public X509Certificate generateX509Certificate(KeyPairWithID keyPair, String issuer, String subject) {
         Security.addProvider(new BouncyCastleProvider());
 
@@ -150,6 +139,29 @@ public class ForgeCraftInternalImpl implements ForgeCraft {
             LOGGER.error("Error generating X509 certificate", e);
             return null;
         }
+    }
+
+    @Override
+    public String serializeX509CertificateToPEM(X509Certificate certificate) {
+        try (StringWriter stringWriter = new StringWriter(); JcaPEMWriter pemWriter = new JcaPEMWriter(stringWriter)) {
+            pemWriter.writeObject(certificate);
+            pemWriter.flush();
+            return stringWriter.toString();
+        } catch (Exception e) {
+            LOGGER.error("Error serializing X509 certificate", e);
+            return null;
+        }
+    }
+
+    @Override
+    public String createJwtToken(KeyPairWithID keyPair, String clientID, String tokenURL) {
+        return Jwt.claims()
+                .issuer(clientID)
+                .subject(clientID)
+                .audience(tokenURL)
+                .jws()
+                .keyId(keyPair.getKeyID())
+                .algorithm(SignatureAlgorithm.RS256).sign(keyPair.getKeyPair().getPrivate());
     }
 
     @Override

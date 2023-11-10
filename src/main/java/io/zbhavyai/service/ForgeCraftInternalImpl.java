@@ -110,13 +110,13 @@ public class ForgeCraftInternalImpl implements ForgeCraft {
     }
 
     @Override
-    public String createJwtToken(String keyID, String clientID, String tokenURL, KeyPairWithID keyPair) {
+    public String createJwtToken(KeyPairWithID keyPair, String clientID, String tokenURL) {
         return Jwt.claims()
                 .issuer(clientID)
                 .subject(clientID)
                 .audience(tokenURL)
                 .jws()
-                .keyId(keyID)
+                .keyId(keyPair.getKeyID())
                 .algorithm(SignatureAlgorithm.RS256).sign(keyPair.getKeyPair().getPrivate());
     }
 

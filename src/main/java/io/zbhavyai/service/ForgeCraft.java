@@ -16,7 +16,7 @@ public interface ForgeCraft {
 
     public KeyPairWithID deserializeKeyPair(String keyID, String publicKeyInBase64, String privateKeyInBase64);
 
-    public String createJwtToken(String keyID, String clientID, String tokenURL, KeyPairWithID keyPair);
+    public String createJwtToken(KeyPairWithID keyPair, String clientID, String tokenURL);
 
     public X509Certificate generateX509Certificate(KeyPairWithID keyPair, String issuer, String subject);
 

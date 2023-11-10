@@ -37,13 +37,13 @@ import io.zbhavyai.model.RSAJSONWebKeySetWithID;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class ForgeCraftInternalImpl implements ForgeCraft {
+public class ForgeCraftImpl implements ForgeCraft {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ForgeCraftInternalImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ForgeCraftImpl.class);
 
     @Override
     public KeyPairWithID generateKeyPair(String keyID) {
-        LOGGER.info("generateKeyPair: {}", keyID);
+        LOGGER.info("generateKeyPair: keyID={}", keyID);
 
         try {
             return new KeyPairWithID(
@@ -57,7 +57,7 @@ public class ForgeCraftInternalImpl implements ForgeCraft {
 
     @Override
     public List<String> serializeKeyPair(KeyPairWithID keyPair) {
-        LOGGER.info("serializeKeyPair: {}", keyPair.getKeyID());
+        LOGGER.info("serializeKeyPair: keyID={}", keyPair.getKeyID());
 
         return List.of(
                 keyPair.getKeyID(),
@@ -67,7 +67,7 @@ public class ForgeCraftInternalImpl implements ForgeCraft {
 
     @Override
     public List<String> serializeKeyPairToPEM(KeyPairWithID keyPair) {
-        LOGGER.info("serializeKeyPairToPEM: {}", keyPair.getKeyID());
+        LOGGER.info("serializeKeyPairToPEM: keyID={}", keyPair.getKeyID());
 
         List<String> serializedKeyPair = new ArrayList<>();
 
@@ -93,7 +93,7 @@ public class ForgeCraftInternalImpl implements ForgeCraft {
 
     @Override
     public KeyPairWithID deserializeKeyPair(String keyID, String publicKeyInBase64, String privateKeyInBase64) {
-        LOGGER.info("loadKeyPair: {}", keyID);
+        LOGGER.info("deserializeKeyPair: keyID={}", keyID);
 
         byte[] publicKeyBytes = Base64.getDecoder().decode(publicKeyInBase64);
         byte[] privateKeyBytes = Base64.getDecoder().decode(privateKeyInBase64);
@@ -111,6 +111,8 @@ public class ForgeCraftInternalImpl implements ForgeCraft {
 
     @Override
     public X509Certificate generateX509Certificate(KeyPairWithID keyPair, String issuer, String subject) {
+        LOGGER.info("generateX509Certificate: keyID={}, issuer={}, subject={}", keyPair.getKeyID(), issuer, subject);
+
         Security.addProvider(new BouncyCastleProvider());
 
         // Generate X.509 certificate
@@ -143,6 +145,8 @@ public class ForgeCraftInternalImpl implements ForgeCraft {
 
     @Override
     public String serializeX509CertificateToPEM(X509Certificate certificate) {
+        LOGGER.info("serializeX509CertificateToPEM: serialNumber={}", certificate.getSerialNumber());
+
         try (StringWriter stringWriter = new StringWriter(); JcaPEMWriter pemWriter = new JcaPEMWriter(stringWriter)) {
             pemWriter.writeObject(certificate);
             pemWriter.flush();
@@ -155,6 +159,8 @@ public class ForgeCraftInternalImpl implements ForgeCraft {
 
     @Override
     public String createJwtToken(KeyPairWithID keyPair, String clientID, String tokenURL) {
+        LOGGER.info("createJwtToken: keyID={}, clientID={}", keyPair.getKeyID(), clientID);
+
         return Jwt.claims()
                 .issuer(clientID)
                 .subject(clientID)
@@ -166,7 +172,7 @@ public class ForgeCraftInternalImpl implements ForgeCraft {
 
     @Override
     public RSAJSONWebKeySetWithID generateJSONWebKeySet(KeyPairWithID keyPair, String clientID) {
-        LOGGER.info("generateJSONWebKeySet: {}", clientID);
+        LOGGER.info("generateJSONWebKeySet: keyID={}, clientID={}", keyPair.getKeyID(), clientID);
 
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getKeyPair().getPublic();
 

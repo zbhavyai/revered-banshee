@@ -1,4 +1,4 @@
-package io.zbhavyai;
+package io.zbhavyai.rest;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 

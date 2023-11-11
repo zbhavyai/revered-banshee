@@ -17,9 +17,9 @@ class TestRSAJSONWebKeySetWithID {
     @Test
     void testSerialization() {
         RSAJSONWebKeySetWithID rsaJWKS = createJWKS();
-        String serializedKeyPair = serialize(rsaJWKS);
-        RSAJSONWebKeySetWithID deserializedKeyPair = deserialize(serializedKeyPair, RSAJSONWebKeySetWithID.class);
-        assertEquals(rsaJWKS, deserializedKeyPair);
+        String serializedJWKS = serialize(rsaJWKS);
+        RSAJSONWebKeySetWithID deserializedJWKS = deserialize(serializedJWKS, RSAJSONWebKeySetWithID.class);
+        assertEquals(rsaJWKS, deserializedJWKS);
     }
 
     private RSAJSONWebKeySetWithID createJWKS() {

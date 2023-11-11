@@ -7,8 +7,10 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.zbhavyai.dto.CertificateInput;
-import io.zbhavyai.dto.KeyAndCertificate;
+import io.zbhavyai.dto.CertificateDTO;
+import io.zbhavyai.dto.CertificateInputDTO;
+import io.zbhavyai.dto.KeyPairAndCertificateDTO;
+import io.zbhavyai.dto.KeyPairDTO;
 import io.zbhavyai.model.KeyPairWithID;
 import io.zbhavyai.service.ForgeCraft;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,7 +19,7 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public class ForgeCraftController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ForgeCraftController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ForgeCraftController.class.getSimpleName());
 
     private final ForgeCraft service;
 
@@ -26,36 +28,43 @@ public class ForgeCraftController {
         this.service = fcService;
     }
 
-    public List<String> generateKeyPair() {
+    public KeyPairDTO generateKeyPair() {
         LOGGER.info("generateKeyPair");
 
         KeyPairWithID keyPair = this.service.generateKeyPair(generateUUID().toString());
-        return this.service.serializeKeyPairToPEM(keyPair);
+        List<String> keyPairSer = this.service.serializeKeyPairToPEM(keyPair);
+
+        return new KeyPairDTO(
+                keyPairSer.get(0),
+                keyPairSer.get(1),
+                keyPairSer.get(2));
     }
 
-    public String generateCertificate() {
+    public CertificateDTO generateCertificate(CertificateInputDTO certInput) {
         LOGGER.info("generateCertificate");
 
         KeyPairWithID keyPair = this.service.generateKeyPair(generateUUID().toString());
-        return this.service
-                .serializeX509CertificateToPEM(this.service.generateX509Certificate(keyPair, "issuer", "subject"));
+        X509Certificate cert = this.service.generateX509Certificate(keyPair, certInput.issuer(), certInput.subject());
+
+        return new CertificateDTO(
+                this.service.serializeX509CertificateToPEM(cert),
+                cert.toString());
     }
 
-    public KeyAndCertificate generateKeyAndCertificate(CertificateInput certInput) {
-        LOGGER.info("generateKeyAndCertificate");
+    public KeyPairAndCertificateDTO generateKeyPairAndCertificate(CertificateInputDTO certInput) {
+        LOGGER.info("generateKeyPairAndCertificate");
 
         KeyPairWithID keyPair = this.service.generateKeyPair(generateUUID().toString());
-        List<String> keyPairSer = this.service.serializeKeyPair(keyPair);
+        List<String> keyPairSer = this.service.serializeKeyPairToPEM(keyPair);
 
-        X509Certificate certificate = this.service.generateX509Certificate(keyPair, certInput.issuer(),
-                certInput.subject());
-        String certificateSer = this.service.serializeX509CertificateToPEM(certificate);
+        X509Certificate cert = this.service.generateX509Certificate(keyPair, certInput.issuer(), certInput.subject());
 
-        return new KeyAndCertificate(
+        return new KeyPairAndCertificateDTO(
                 keyPairSer.get(0),
                 keyPairSer.get(1),
                 keyPairSer.get(2),
-                certificateSer);
+                this.service.serializeX509CertificateToPEM(cert),
+                cert.toString());
     }
 
     private UUID generateUUID() {

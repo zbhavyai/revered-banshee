@@ -2,7 +2,7 @@ package io.zbhavyai.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record CertificateInput(
+public record CertificateInputDTO(
         @JsonProperty("issuer") String issuer,
         @JsonProperty("subject") String subject) {
 }

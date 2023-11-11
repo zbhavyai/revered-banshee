@@ -39,7 +39,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class ForgeCraftImpl implements ForgeCraft {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ForgeCraftImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ForgeCraftImpl.class.getSimpleName());
 
     @Override
     public KeyPairWithID generateKeyPair(String keyID) {

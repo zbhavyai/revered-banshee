@@ -1,10 +1,10 @@
 package io.zbhavyai.rest;
 
-import java.util.List;
-
 import io.zbhavyai.controller.ForgeCraftController;
-import io.zbhavyai.dto.CertificateInput;
-import io.zbhavyai.dto.KeyAndCertificate;
+import io.zbhavyai.dto.CertificateDTO;
+import io.zbhavyai.dto.CertificateInputDTO;
+import io.zbhavyai.dto.KeyPairAndCertificateDTO;
+import io.zbhavyai.dto.KeyPairDTO;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -33,22 +33,23 @@ public class ForgeCraftRest {
     @POST
     @Path("/generate-keypair")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<String> generateKeyPair() {
+    public KeyPairDTO generateKeyPair() {
         return controller.generateKeyPair();
     }
 
     @POST
     @Path("/generate-certificate")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String generateCertificate() {
-        return controller.generateCertificate();
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public CertificateDTO generateCertificate(CertificateInputDTO certInput) {
+        return controller.generateCertificate(certInput);
     }
 
     @POST
     @Path("/generate")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public KeyAndCertificate generateKeyAndCertificate(CertificateInput certInput) {
-        return controller.generateKeyAndCertificate(certInput);
+    public KeyPairAndCertificateDTO generateKeyAndCertificate(CertificateInputDTO certInput) {
+        return controller.generateKeyPairAndCertificate(certInput);
     }
 }

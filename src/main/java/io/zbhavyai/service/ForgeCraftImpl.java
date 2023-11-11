@@ -57,31 +57,31 @@ public class ForgeCraftImpl implements ForgeCraft {
 
     @Override
     public List<String> serializeKeyPair(KeyPairWithID keyPair) {
-        LOGGER.info("serializeKeyPair: keyID={}", keyPair.getKeyID());
+        LOGGER.info("serializeKeyPair: keyID={}", keyPair.keyID());
 
         return List.of(
-                keyPair.getKeyID(),
-                Base64.getEncoder().encodeToString(keyPair.getKeyPair().getPublic().getEncoded()),
-                Base64.getEncoder().encodeToString(keyPair.getKeyPair().getPrivate().getEncoded()));
+                keyPair.keyID(),
+                Base64.getEncoder().encodeToString(keyPair.keyPair().getPublic().getEncoded()),
+                Base64.getEncoder().encodeToString(keyPair.keyPair().getPrivate().getEncoded()));
     }
 
     @Override
     public List<String> serializeKeyPairToPEM(KeyPairWithID keyPair) {
-        LOGGER.info("serializeKeyPairToPEM: keyID={}", keyPair.getKeyID());
+        LOGGER.info("serializeKeyPairToPEM: keyID={}", keyPair.keyID());
 
         List<String> serializedKeyPair = new ArrayList<>();
 
-        serializedKeyPair.add(keyPair.getKeyID());
+        serializedKeyPair.add(keyPair.keyID());
 
         try (StringWriter stringWriter = new StringWriter(); JcaPEMWriter pemWriter = new JcaPEMWriter(stringWriter)) {
-            pemWriter.writeObject(keyPair.getKeyPair().getPublic());
+            pemWriter.writeObject(keyPair.keyPair().getPublic());
             pemWriter.flush();
             serializedKeyPair.add(stringWriter.toString());
 
             // reset StringWriter buffer
             stringWriter.getBuffer().setLength(0);
 
-            pemWriter.writeObject(keyPair.getKeyPair().getPrivate());
+            pemWriter.writeObject(keyPair.keyPair().getPrivate());
             pemWriter.flush();
             serializedKeyPair.add(stringWriter.toString());
         } catch (Exception e) {
@@ -111,7 +111,7 @@ public class ForgeCraftImpl implements ForgeCraft {
 
     @Override
     public X509Certificate generateX509Certificate(KeyPairWithID keyPair, String issuer, String subject) {
-        LOGGER.info("generateX509Certificate: keyID={}, issuer={}, subject={}", keyPair.getKeyID(), issuer, subject);
+        LOGGER.info("generateX509Certificate: keyID={}, issuer={}, subject={}", keyPair.keyID(), issuer, subject);
 
         Security.addProvider(new BouncyCastleProvider());
 
@@ -121,7 +121,7 @@ public class ForgeCraftImpl implements ForgeCraft {
 
         try {
             ContentSigner contentSigner = new JcaContentSignerBuilder("SHA256WithRSA")
-                    .build(keyPair.getKeyPair().getPrivate());
+                    .build(keyPair.keyPair().getPrivate());
 
             X509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(
                     issuerName,
@@ -129,13 +129,13 @@ public class ForgeCraftImpl implements ForgeCraft {
                     new Date(System.currentTimeMillis()),
                     new Date(System.currentTimeMillis() + 365L * 24 * 60 * 60 * 1000),
                     subjectName,
-                    keyPair.getKeyPair().getPublic());
+                    keyPair.keyPair().getPublic());
 
             X509Certificate certificate = new JcaX509CertificateConverter()
                     .setProvider("BC")
                     .getCertificate(certBuilder.build(contentSigner));
 
-            certificate.verify(keyPair.getKeyPair().getPublic());
+            certificate.verify(keyPair.keyPair().getPublic());
             return certificate;
         } catch (Exception e) {
             LOGGER.error("Error generating X509 certificate", e);
@@ -159,25 +159,25 @@ public class ForgeCraftImpl implements ForgeCraft {
 
     @Override
     public String createJwtToken(KeyPairWithID keyPair, String clientID, String tokenURL) {
-        LOGGER.info("createJwtToken: keyID={}, clientID={}", keyPair.getKeyID(), clientID);
+        LOGGER.info("createJwtToken: keyID={}, clientID={}", keyPair.keyID(), clientID);
 
         return Jwt.claims()
                 .issuer(clientID)
                 .subject(clientID)
                 .audience(tokenURL)
                 .jws()
-                .keyId(keyPair.getKeyID())
-                .algorithm(SignatureAlgorithm.RS256).sign(keyPair.getKeyPair().getPrivate());
+                .keyId(keyPair.keyID())
+                .algorithm(SignatureAlgorithm.RS256).sign(keyPair.keyPair().getPrivate());
     }
 
     @Override
     public RSAJSONWebKeySetWithID generateJSONWebKeySet(KeyPairWithID keyPair, String clientID) {
-        LOGGER.info("generateJSONWebKeySet: keyID={}, clientID={}", keyPair.getKeyID(), clientID);
+        LOGGER.info("generateJSONWebKeySet: keyID={}, clientID={}", keyPair.keyID(), clientID);
 
-        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getKeyPair().getPublic();
+        RSAPublicKey publicKey = (RSAPublicKey) keyPair.keyPair().getPublic();
 
         final RSAJSONWebKey jwk = new RSAJSONWebKey(
-                keyPair.getKeyID(),
+                keyPair.keyID(),
                 "RSA",
                 Base64.getUrlEncoder().withoutPadding().encodeToString(publicKey.getModulus().toByteArray()),
                 Base64.getUrlEncoder().withoutPadding().encodeToString(publicKey.getPublicExponent().toByteArray()));

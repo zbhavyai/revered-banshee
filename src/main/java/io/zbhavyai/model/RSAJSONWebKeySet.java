@@ -6,9 +6,4 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record RSAJSONWebKeySet(
         @JsonProperty("keys") List<RSAJSONWebKey> keys) {
-
-    @JsonProperty("keys")
-    public List<RSAJSONWebKey> getKeys() {
-        return this.keys;
-    }
 }

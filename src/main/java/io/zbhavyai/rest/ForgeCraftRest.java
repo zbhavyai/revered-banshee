@@ -1,10 +1,7 @@
 package io.zbhavyai.rest;
 
 import io.zbhavyai.controller.ForgeCraftController;
-import io.zbhavyai.dto.CertificateDTO;
-import io.zbhavyai.dto.CertificateInputDTO;
-import io.zbhavyai.dto.KeyPairAndCertificateDTO;
-import io.zbhavyai.dto.KeyPairDTO;
+import io.zbhavyai.dto.*;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -51,5 +48,13 @@ public class ForgeCraftRest {
     @Consumes(MediaType.APPLICATION_JSON)
     public KeyPairAndCertificateDTO generateKeyAndCertificate(CertificateInputDTO certInput) {
         return controller.generateKeyPairAndCertificate(certInput);
+    }
+
+    @POST
+    @Path("/keypair-base64-pem")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public KeyPairAndCertificateDTO convertKeyPairBase64ToPem(KeyPairAndCertificateInputDTO keyAndCertInput) {
+        return controller.convertKeyPairBase64ToPem(keyAndCertInput);
     }
 }

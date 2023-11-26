@@ -95,10 +95,10 @@ public class ForgeCraftImpl implements ForgeCraft {
     public KeyPairWithID deserializeKeyPair(String keyID, String publicKeyInBase64, String privateKeyInBase64) {
         LOGGER.info("deserializeKeyPair: keyID={}", keyID);
 
-        byte[] publicKeyBytes = Base64.getDecoder().decode(publicKeyInBase64);
-        byte[] privateKeyBytes = Base64.getDecoder().decode(privateKeyInBase64);
-
         try {
+            byte[] publicKeyBytes = Base64.getDecoder().decode(publicKeyInBase64);
+            byte[] privateKeyBytes = Base64.getDecoder().decode(privateKeyInBase64);
+
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             PublicKey consPublicKey = keyFactory.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
             PrivateKey consPrivateKey = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));

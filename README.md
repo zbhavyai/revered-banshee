@@ -1,60 +1,38 @@
-# revered-banshee
+# Revered Banshee
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Utility wrapper project to generate RSA keys and X509 certs using Bouncy Castle.
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+## Build and run locally
 
-## Running the application in dev mode
+Run the project on `localhost:8080`
 
-You can run your application in dev mode that enables live coding using:
-```shell script
-./gradlew quarkusDev
-```
-
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
-
-## Packaging and running the application
-
-The application can be packaged using:
-```shell script
-./gradlew build
-```
-It produces the `quarkus-run.jar` file in the `build/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `build/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar build/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-```shell script
+```shell
 ./gradlew build -Dquarkus.package.type=uber-jar
+java -jar build/*-runner.jar
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar build/*-runner.jar`.
+## How to use
 
-## Creating a native executable
+- Generate a new RSA public-private key pair and X509 certificate with given subject and issuer:
 
-You can create a native executable using: 
-```shell script
-./gradlew build -Dquarkus.package.type=native
-```
+   ```shell
+   curl --silent --request POST --header 'Content-Type: application/json' --location 'localhost:8080/api/v1/generate' --data '{"subject": "www.mycompany.com", "issuer": "My Company"}'
+   ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
-```shell script
-./gradlew build -Dquarkus.package.type=native -Dquarkus.native.container-build=true
-```
+- Generate a new RSA public-private key pair
 
-You can then execute your native executable with: `./build/revered-banshee-1.0.0-SNAPSHOT-runner`
+   ```shell
+   curl --silent --request POST --header 'Content-Type: application/json' --location 'localhost:8080/api/v1/generate-keypair'
+   ```
 
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/gradle-tooling.
+- Convert a given RSA public-private key pair from base64 to PEM format
 
-## Related Guides
-
-- RESTEasy Reactive ([guide](https://quarkus.io/guides/resteasy-reactive)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-
-## Provided Code
-
-### RESTEasy Reactive
-
-Easily start your Reactive RESTful Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+   ```shell
+   curl --silent --request POST --header 'Content-Type: application/json' --location 'localhost:8080/api/v1/keypair-base64-pem' --data '{
+      "keyID": "29fb5f8b-91a2-420a-a710-73f77ec8216f",
+      "publicKey": "<rsa public key in base 64>",
+      "privateKey": "<rsa private key in base 64>",
+      "subject": "subject",
+      "issuer": "issuer"
+   }'
+   ```
